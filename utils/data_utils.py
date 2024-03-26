@@ -172,6 +172,9 @@ class VideoDataset(data.Dataset):
         self._clips.get_clip_location = self.get_random_clip_from_video
         
     def get_random_clip_from_video(self, idx):
+        # Note that some videos may not contain enough frames, we skip those videos here.
+        while self._clips.clips[idx].shape[0] <= 0:
+            idx += 1
         n_clip = self._clips.clips[idx].shape[0]
         clip_id = random.randint(0, n_clip - 1)
         return idx, clip_id
