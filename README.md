@@ -25,12 +25,13 @@ Load the models for computing FVDs.
 **Parameters:**
 * **model** - str, name of the model to use, either 'videomae' or 'i3d'
 * **n_real** - int, number of real videos to use, if 'full', all real videos in the dataset are used
-* **n_fake** - int, number of fake videos to use
+* **n_fake** - int, number of fake videos to use, if 'full', all real videos in the dataset are used
 * **ckpt_path** - str, path to download the model checkpoint
 * **seed** - int, random seed
 * **compute_feats** - bool, whether to keep all features or just mean and covariance
 * **device** - str, device to use for computing the features
 
+**Note:** if `n_fake` (or `n_real`) is greater than the number of videos in the folder, then videos from the folder will be resampled to match `n_fake` (or `n_real`).
 
 ```
 video_loader = fvd.load_videos(video_info, resolution=128, sequence_length=16, sample_every_n_frames=1, data_type='video_folder', num_workers=8)
