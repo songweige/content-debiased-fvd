@@ -45,7 +45,7 @@ class cd_fvd(object):
     This class is used to compute the FVD score between real and fake videos.
     model: str, name of the model to use, either 'videomae' or 'i3d'
     n_real: int, number of real videos to use for computing the FVD score, if 'full', all real videos are used
-    n_fake: int, number of fake videos to use for computing the FVD score
+    n_fake: int, number of fake videos to use for computing the FVD score, if 'full', all real videos are used
     ckpt_path: str, path to the model checkpoint
     seed: int, random seed
     compute_feats: bool, whether to compute all features or just mean and covariance
@@ -58,7 +58,7 @@ class cd_fvd(object):
         self.seed = seed
         self.device = device
         self.real_stats = FeatureStats(max_items=None if n_real == 'full' else n_real, capture_mean_cov=True, capture_all=compute_feats)
-        self.fake_stats = FeatureStats(max_items=n_fake, capture_mean_cov=True, capture_all=compute_feats)
+        self.fake_stats = FeatureStats(max_items=None if n_fake == 'full' else n_fake, capture_mean_cov=True, capture_all=compute_feats)
         self.model_dtype = (
             torch.float16 if half_precision else torch.float32
         )
@@ -189,7 +189,7 @@ class cd_fvd(object):
                                     batch_size=batch_size, num_workers=num_workers)
         elif data_type=='stats_pkl':
             video_loader = None
-            self.real_stats = self.real_stats.load(video_info)
+            load_real_stats(video_info)
 
         else:
             raise ValueError('Invalid real_video path')
