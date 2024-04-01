@@ -1,6 +1,6 @@
 # Content-Debiased FVD
 
-### [Project Page]() | [Paper]()
+### [Project Page](https://content-debiased-fvd.github.io/) | [Paper]()
 
 FVD is observed to favor the quality of individual frames over realistic motions. We verify this with quantitative measurement. We show that the bias can be attributed to the features extracted from a video classifier trained on the content-biased dataset in a supervised way and using features from large-scale unsupervised model can mitigate the bias.
 
@@ -31,7 +31,7 @@ Load the models for computing FVDs.
 * **compute_feats** - bool, whether to keep all features or just mean and covariance
 * **device** - str, device to use for computing the features
 
-
+---
 ```
 video_loader = fvd.load_videos(video_info, resolution=128, sequence_length=16, sample_every_n_frames=1, data_type='video_folder', num_workers=8)
 ```
@@ -45,14 +45,16 @@ Prepare the dataloader of different types of video sets specified by `data_type`
 * **data_type** - str, type of the video data, either `video_folder`, `image_folder`, `video_numpy`, or `stats_pkl`
 * **num_workers** - int, number of workers for the dataloader
 
+---
 ```
 fvd.compute_real_stats(video_loader)
 ```
-Compute the statistics for each video set and the FVD score.
+Compute the FVD statistics (mean and covariance matrix) for the video data loader.
 
 **Parameters:**
 * **video_loader** - dataloader, dataloader of the video set
 
+---
 ```
 fvd.compute_fvd_from_stats(fake_stats=None, real_stats=None)
 ```
@@ -62,6 +64,7 @@ Compute the FVD score from the statistics of the real and fake videos.
 * **fake_stats** - FeatureStats, statistics of the fake videos. Default is `None`, in which case the `fvd.fake_stats` are used.
 * **real_stats** - FeatureStats, statistics of the real videos. Default is `None`, in which case the `fvd.real_stats` are used.
 
+---
 ```
 fvd.load_real_stats(filename)
 ```
@@ -71,6 +74,7 @@ Load the saved FVD statistics.
 * **filename** - str, path to load the statistics
 
 
+---
 ```
 filename = 'stats_cache/real_stats.pkl'
 fvd.save_real_stats(filename)
@@ -81,6 +85,7 @@ Save FVD statistics of the real videos for later use.
 * **filename** - str, path to save the statistics
 
 
+---
 ```
 fvd.add_fake_stats(fake_videos)
 ```
@@ -89,11 +94,13 @@ This is useful to compute FVD when generating videos without saving it locally, 
 **Parameters:**
 * **fake_videos** - Numpy array, shape (B, T, H, W, C)
 
+---
 ```
 fvd.empty_fake_stats()
 ```
 Reset the fake video statistics for the next validation step
 
+---
 ```
 fvd.offload_model_to_cpu()
 ```
