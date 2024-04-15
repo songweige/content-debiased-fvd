@@ -196,7 +196,7 @@ class cd_fvd(object):
                                     batch_size=batch_size, num_workers=num_workers)
         elif data_type=='stats_pkl':
             video_loader = None
-            cache_name = '%s_%s_%s_res%d_len%d_skip%d_seed%d.pkl' % (self.model_name, video_info, self.n_real, resolution, sequence_length, sample_every_n_frames, 0)
+            cache_name = '%s_%s_%s_res%d_len%d_skip%d_seed%d.pkl' % (self.model_name.lower(), video_info, self.n_real, resolution, sequence_length, sample_every_n_frames, 0)
             current_dir = os.path.dirname(os.path.abspath(__file__))
             ckpt_path = os.path.join(current_dir, 'fvd_stats_cache', cache_name)
             os.makedirs(os.path.dirname(ckpt_path), exist_ok=True)

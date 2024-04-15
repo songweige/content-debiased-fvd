@@ -8,6 +8,7 @@
 *.sh
 slurm/
 stats_cache/*
+fvd_stats_cache/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
