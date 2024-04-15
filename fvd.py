@@ -8,6 +8,7 @@ from utils.metric_utils import seed_everything, FeatureStats
 
 import numpy as np
 import torch
+import requests
 
 from tqdm import tqdm
 from einops import rearrange
@@ -45,7 +46,7 @@ class cd_fvd(object):
     This class is used to compute the FVD score between real and fake videos.
     model: str, name of the model to use, either 'videomae' or 'i3d'
     n_real: int, number of real videos to use for computing the FVD score, if 'full', all real videos are used
-    n_fake: int, number of fake videos to use for computing the FVD score, if 'full', all real videos are used
+    n_fake: int, number of fake videos to use for computing the FVD score
     ckpt_path: str, path to the model checkpoint
     seed: int, random seed
     compute_feats: bool, whether to compute all features or just mean and covariance
@@ -57,8 +58,10 @@ class cd_fvd(object):
         self.ckpt_path = ckpt_path
         self.seed = seed
         self.device = device
+        self.n_real = n_real
+        self.n_fake = n_fake
         self.real_stats = FeatureStats(max_items=None if n_real == 'full' else n_real, capture_mean_cov=True, capture_all=compute_feats)
-        self.fake_stats = FeatureStats(max_items=None if n_fake == 'full' else n_fake, capture_mean_cov=True, capture_all=compute_feats)
+        self.fake_stats = FeatureStats(max_items=n_fake, capture_mean_cov=True, capture_all=compute_feats)
         self.model_dtype = (
             torch.float16 if half_precision else torch.float32
         )
@@ -98,6 +101,10 @@ class cd_fvd(object):
         loader: torch.utils.data.DataLoader, dataloader for real videos
         '''
         seed_everything(self.seed)
+        if loader is None:
+            assert self.real_stats.max_items is not None
+            return
+
         while self.real_stats.max_items is None or self.real_stats.num_items < self.real_stats.max_items:
             for batch in tqdm(loader):
                 real_videos = rearrange(batch['video']*255, 'b c t h w -> b t h w c').byte().data.numpy()
@@ -189,7 +196,25 @@ class cd_fvd(object):
                                     batch_size=batch_size, num_workers=num_workers)
         elif data_type=='stats_pkl':
             video_loader = None
-            load_real_stats(video_info)
+            cache_name = '%s_%s_%s_res%d_len%d_skip%d_seed%d.pkl' % (self.model_name, video_info, self.n_real, resolution, sequence_length, sample_every_n_frames, 0)
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            ckpt_path = os.path.join(current_dir, 'fvd_stats_cache', cache_name)
+            os.makedirs(os.path.dirname(ckpt_path), exist_ok=True)
+
+            if not os.path.exists(ckpt_path):
+                # download the ckpt to the path
+                ckpt_url = 'https://content-debiased-fvd.github.io/files/%s' % cache_name
+                response = requests.get(ckpt_url, stream=True, allow_redirects=True)
+                total_size = int(response.headers.get("content-length", 0))
+                block_size = 1024
+
+                with tqdm(total=total_size, unit="B", unit_scale=True) as progress_bar:
+                    with open(ckpt_path, "wb") as fw:
+                        for data in response.iter_content(block_size):
+                            progress_bar.update(len(data))
+                            fw.write(data)
+
+            self.real_stats = self.real_stats.load(ckpt_path)
 
         else:
             raise ValueError('Invalid real_video path')
