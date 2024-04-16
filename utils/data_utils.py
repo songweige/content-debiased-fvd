@@ -76,15 +76,21 @@ def preprocess_image(image):
 
 
 class VideoData(data.Dataset):
-    """ Class to create dataloaders for video datasets """
+    """ Class to create dataloaders for video datasets 
 
-    def __init__(self, data_path, image_folder, resolution, sequence_length,
-                 sample_every_n_frames, batch_size, num_workers, shuffle=True):
-        """
-        Args:
-            args: arguments from command line
-            shuffle: shuffle the dataset
-        """
+    Args:
+        data_path: Path to the folder with video frames or videos.
+        image_folder: If True, the data is stored as images in folders.
+        resolution: Resolution of the returned videos.
+        sequence_length: Length of extracted video sequences.
+        sample_every_n_frames: Sample every n frames from the video.
+        batch_size: Batch size.
+        num_workers: Number of workers for the dataloader.
+        shuffle: If True, shuffle the data.
+    """
+
+    def __init__(self, data_path: str, image_folder: bool, resolution: int, sequence_length: int,
+                 sample_every_n_frames: int, batch_size: int, num_workers: int, shuffle: bool = True):
         super().__init__()
         self.data_path = data_path
         self.image_folder = image_folder
@@ -95,12 +101,10 @@ class VideoData(data.Dataset):
         self.num_workers = num_workers
         self.shuffle = shuffle
 
-    @property
-    def n_classes(self):
-        dataset = self._dataset(True)
-        return dataset.n_classes
-
     def _dataset(self):
+        '''
+        Initializes and return the dataset.
+        '''
         if self.image_folder:
             Dataset = FrameDataset
             dataset = Dataset(self.data_path, self.sequence_length,
@@ -112,6 +116,9 @@ class VideoData(data.Dataset):
         return dataset
 
     def _dataloader(self):
+        '''
+        Initializes and returns the dataloader.
+        '''
         dataset = self._dataset()
         if dist.is_initialized():
             sampler = data.distributed.DistributedSampler(
@@ -131,20 +138,20 @@ class VideoData(data.Dataset):
 
 
 class VideoDataset(data.Dataset):
-    """ Generic dataset for videos files stored in folders
-    Returns BCTHW videos in the range [0, 1]
-    Note: this samples uniformly across all possible video clips (e.g., 16 frames)"""
+    """ 
+    Generic dataset for videos files stored in folders.
+    Videos of the same class are expected to be stored in a single folder. Multiple folders can exist in the provided directory.
+    The class depends on `torchvision.datasets.video_utils.VideoClips` to load the videos.
+    Returns BCTHW videos in the range [0, 1].
 
-    def __init__(self, data_folder, sequence_length=16, resolution=128, sample_every_n_frames=1):
-        """
-        Args:
-            data_folder: path to the folder with videos. The folder
-                should contain a 'train' and a 'test' directory,
-                each with corresponding videos stored
-            sequence_length: length of extracted video sequences
-            resolution: resolution of the returned videos
-            sample_every_n_frames: sample every n frames from the video
-        """
+    Args:
+        data_folder: Path to the folder with corresponding videos stored.
+        sequence_length: Length of extracted video sequences.
+        resolution: Resolution of the returned videos.
+        sample_every_n_frames: Sample every n frames from the video.
+    """
+
+    def __init__(self, data_folder: str, sequence_length: int = 16, resolution: int = 128, sample_every_n_frames: int = 1):
         super().__init__()
         self.sequence_length = sequence_length
         self.resolution = resolution
@@ -171,7 +178,13 @@ class VideoDataset(data.Dataset):
         # instead of uniformly sampling from all possible clips, we sample uniformly from all possible videos
         self._clips.get_clip_location = self.get_random_clip_from_video
         
-    def get_random_clip_from_video(self, idx):
+    def get_random_clip_from_video(self, idx: int) -> tuple:
+        '''
+        Sample a random clip starting index from the video.
+
+        Args:
+            idx: Index of the video.
+        '''
         # Note that some videos may not contain enough frames, we skip those videos here.
         while self._clips.clips[idx].shape[0] <= 0:
             idx += 1
@@ -197,19 +210,19 @@ class VideoDataset(data.Dataset):
 
 
 class FrameDataset(data.Dataset):
-    """ Generic dataset for videos stored as images
-    Returns BCTHW videos in the range [0, 1] 
-    Note: this samples uniformly across videos"""
+    """ 
+    Generic dataset for videos stored as images. The loading will iterates over all the folders and subfolders
+        in the provided directory. Each leaf folder is assumed to contain frames from a single video.
+
+    Args:
+        data_folder: path to the folder with video frames. The folder
+            should contain folders with frames from each video.
+        sequence_length: length of extracted video sequences
+        resolution: resolution of the returned videos
+        sample_every_n_frames: sample every n frames from the video
+    """
 
     def __init__(self, data_folder, sequence_length, resolution=64, sample_every_n_frames=1):
-        """
-        Args:
-            data_folder: path to the folder with video frames. The folder
-                should contain folders with frames from each video.
-            sequence_length: length of extracted video sequences
-            resolution: resolution of the returned videos
-            sample_every_n_frames: sample every n frames from the video
-        """
         self.resolution = resolution
         self.sequence_length = sequence_length
         self.sample_every_n_frames = sample_every_n_frames
@@ -222,7 +235,17 @@ class FrameDataset(data.Dataset):
 
         return return_list
 
-    def load_video_frames(self, dataroot):
+    def load_video_frames(self, dataroot: str) -> list:
+        '''
+        Loads all the video frames under the dataroot and returns a list of all the video frames.
+
+        Args:
+            dataroot: The root directory containing the video frames.
+
+        Returns:
+            data_all: A list of all the video frames.
+
+        '''
         data_all = []
         frame_list = os.walk(dataroot)
         for _, meta in enumerate(frame_list):
@@ -239,9 +262,20 @@ class FrameDataset(data.Dataset):
             ]
             if len(frames) > max(0, self.sequence_length * self.sample_every_n_frames):
                 data_all.append(frames)
+
         return data_all
 
-    def getTensor(self, index):
+    def getTensor(self, index: int) -> torch.Tensor:
+        '''
+        Returns a tensor of the video frames at the given index.
+
+        Args:
+            index: The index of the video frames to return.
+
+        Return:
+            video_clip: A BCTHW tensor in the range `[0, 1]` of the video frames at the given index.
+
+        '''
         video = self.data_all[index]
         video_len = len(video)
 
