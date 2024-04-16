@@ -1,8 +1,13 @@
-# Content-Debiased FVD
+# Content-Debiased FVD for Evaluating Video Generation Models
 
 ### [Project Page](https://content-debiased-fvd.github.io/) | [Documentation](https://content-debiased-fvd.github.io/documentation) | [Paper]()
 
-FVD is observed to favor the quality of individual frames over realistic motions. We verify this with quantitative measurement. We show that the bias can be attributed to the features extracted from a video classifier trained on the content-biased dataset in a supervised way and using features from large-scale unsupervised model can mitigate the bias. This repo contains code tookit for easily computing FVDs with different models. Please refer to out project page and paper for more detailed analysis. 
+FVD is observed to favor the quality of individual frames over realistic motions. We verify this with quantitative measurement. We show that the bias can be attributed to the features extracted from a supervised video classifier trained on the content-biased dataset and using features from large-scale unsupervised models can mitigate the bias. This repo contains code tookit for easily computing FVDs with different pre-trained models. Please refer to out project page or paper for more details about the analysis. 
+
+***On the Content Bias in Fréchet Video Distance*** <br>
+[Songwei Ge](https://songweige.github.io/), [Aniruddha Mahapatra](https://anime26398.github.io/), [Gaurav Parmar](https://gauravparmar.com/), [Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/), [Jia-Bin Huang](https://jbhuang0604.github.io/)<br>
+UMD, CMU<br>
+CVPR 2024
 
 
 ## Quickstart
@@ -10,19 +15,36 @@ We provide a simple interface to compute FVD scores between two sets of videos t
 ```
 from fvd import cd_fvd
 fvd = cd_fvd('videomae', ckpt_path=None)
-fvd.compute_real_stats(fvd.load_videos(real_video_folder))
-fvd.compute_fake_stats(fvd.load_videos(fake_video_folder))
+fvd.compute_real_stats(fvd.load_videos('path/to/real videos/'))
+fvd.compute_fake_stats(fvd.load_videos('path/to/fake videos/'))
 fvd = fvd.compute_fvd_from_stats()
 ```
-Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions and usages.
+Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
 
 ## Precomputed Datasets
-We provide precomputed statistics for the following datasets:
+We provide precomputed statistics for the following datasets. 
 
 | Dataset             |  Video Length  | Resolution | Reference Split          | # Reference Videos | Model | Skip Frame # | Seed |
 | :-:              | :---:     | :-:        | :-:            |  :-:          | :-: |  :-:          | :-: |
 | [UCF101](https://www.crcv.ucf.edu/data/UCF101.php) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Sky](https://github.com/weixiong-ur/mdgan) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Taichi](https://github.com/AliaksandrSiarohin/first-order-model/blob/master/data/taichi-loading/README.md) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
-| [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
+| [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 16     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
+| [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 128     | 128, 256         | `train`        |  2048       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [FFS](https://github.com/ondyari/FaceForensics) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
+
+
+## Citation
+
+``` bibtex
+@inproceedings{ge2024content,
+      title={On the Content Bias in Fréchet Video Distance},
+      author={Ge, Songwei and Mahapatra, Aniruddha and Parmar, Gaurav and Zhu, Jun-Yan and Huang, Jia-Bin},
+      booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+      year={2024}
+}
+```
+
+## Acknowledgement
+
+We thank Angjoo Kanazawa, Aleksander Holynski, Devi Parikh, and Yogesh Balaji for their early feedback and discussion. We thank Or Patashnik, Richard Zhang, and Hadi Alzayer for their helpful comments and paper proofreading. We thank Ivan Skorokhodov for his help with reproducing the StyleGAN-v ablation experiments. Part of the evaluation code is built on [StyleGAN-v](https://github.com/universome/stylegan-v).
