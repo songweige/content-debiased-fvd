@@ -6,7 +6,6 @@ import pickle
 import warnings
 
 import glob
-import argparse
 import numpy as np
 from PIL import Image
 
@@ -243,7 +242,7 @@ class FrameDataset(data.Dataset):
             dataroot: The root directory containing the video frames.
 
         Returns:
-            data_all: A list of all the video frames.
+            A list of all the video frames.
 
         '''
         data_all = []
@@ -272,8 +271,8 @@ class FrameDataset(data.Dataset):
         Args:
             index: The index of the video frames to return.
 
-        Return:
-            video_clip: A BCTHW tensor in the range `[0, 1]` of the video frames at the given index.
+        Returns:
+            A BCTHW tensor in the range `[0, 1]` of the video frames at the given index.
 
         '''
         video = self.data_all[index]

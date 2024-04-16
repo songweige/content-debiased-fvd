@@ -48,3 +48,11 @@ We provide precomputed statistics for the following datasets.
 ## Acknowledgement
 
 We thank Angjoo Kanazawa, Aleksander Holynski, Devi Parikh, and Yogesh Balaji for their early feedback and discussion. We thank Or Patashnik, Richard Zhang, and Hadi Alzayer for their helpful comments and paper proofreading. We thank Ivan Skorokhodov for his help with reproducing the StyleGAN-v ablation experiments. Part of the evaluation code is built on [StyleGAN-v](https://github.com/universome/stylegan-v).
+
+## Licenses
+
+All material in this repository is made available under the [MIT License](https://github.com/songweige/content-debiased-fvd/LICENSE). 
+
+[metric_utils.py](https://github.com/songweige/content-debiased-fvd/utils/metric_utils.py) is adapted from the stylegan-v [metric_utils.py](https://github.com/universome/stylegan-v/blob/master/src/metrics/metric_utils.py), which was built on top of [StyleGAN2-ADA](https://github.com/nvlabs/stylegan2-ada) and restricted by the [NVidia Source Code license](https://nvlabs.github.io/stylegan2-ada-pytorch/license.html) .
+
+VideoMAE-v2 checkpoint is [publicly available](https://github.com/OpenGVLab/VideoMAEv2/blob/master/docs/MODEL_ZOO.). Please consider filling this [questionaire](https://docs.google.com/forms/d/e/1FAIpQLSd1SjKMtD8piL9uxGEUwicerxd46bs12QojQt92rzalnoI3JA/viewform) to help improve the future works.

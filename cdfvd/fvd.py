@@ -1,10 +1,9 @@
 import os
-import glob
 import scipy
 import torch
 import numpy as np
-from utils.data_utils import get_dataloader, VID_EXTENSIONS
-from utils.metric_utils import seed_everything, FeatureStats
+from .utils.data_utils import get_dataloader, VID_EXTENSIONS
+from .utils.metric_utils import seed_everything, FeatureStats
 
 import numpy as np
 import torch
@@ -13,10 +12,10 @@ import requests
 from tqdm import tqdm
 from einops import rearrange
 
-from third_party.VideoMAEv2.utils import load_videomae_model, preprocess_videomae
-from third_party.i3d.utils import load_i3d_model, preprocess_i3d
+from .third_party.VideoMAEv2.utils import load_videomae_model, preprocess_videomae
+from .third_party.i3d.utils import load_i3d_model, preprocess_i3d
 
-from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
+from typing import List, Optional, Union
 import numpy.typing as npt
 
 def get_videomae_features(stats, model, videos, batchsize=16, device='cuda', model_dtype=torch.float32):
@@ -43,7 +42,7 @@ def get_i3d_logits(stats, i3d, videos, batchsize=16, device='cuda', model_dtype=
     return stats
 
 
-class cd_fvd(object):
+class cdfvd(object):
     '''This class loads a pretrained model (I3D or VideoMAE) and contains functions to compute the FVD score between real and fake videos.
 
     Args:
@@ -88,7 +87,7 @@ class cd_fvd(object):
             real_stats: `FeatureStats` object containing the features of the real videos.
         
         Returns:
-            fvd: FVD score between the real and fake videos.
+            FVD score between the real and fake videos.
         '''
         fake_stats = self.fake_stats if fake_stats is None else fake_stats
         real_stats = self.real_stats if real_stats is None else real_stats
@@ -107,7 +106,7 @@ class cd_fvd(object):
             fake_videos: A numpy array of videos with shape `(B, T, H, W, C)`, values in the range `[0, 255]`
         
         Returns:
-            fvd: FVD score between the real and fake videos.
+            FVD score between the real and fake videos.
         '''
         self.real_stats = self.feature_fn(self.real_stats, self.model, real_videos, device=self.device, model_dtype=self.model_dtype)
         self.fake_stats = self.feature_fn(self.fake_stats, self.model, fake_videos, device=self.device, model_dtype=self.model_dtype)
@@ -122,7 +121,7 @@ class cd_fvd(object):
             loader: real videos, either in the type of dataloader or list of numpy arrays.
 
         Returns:
-            real_stats: FeatureStats object containing the features of the real videos.
+            FeatureStats object containing the features of the real videos.
         '''
         seed_everything(self.seed)
         if loader is None:
@@ -148,7 +147,7 @@ class cd_fvd(object):
             loader: fake videos, either in the type of dataloader or list of numpy arrays.
         
         Returns:
-            fake_stats: FeatureStats object containing the features of the fake videos.
+            FeatureStats object containing the features of the fake videos.
         '''
         seed_everything(self.seed)
         while self.fake_stats.max_items is None or self.fake_stats.num_items < self.fake_stats.max_items:
@@ -232,7 +231,7 @@ class cd_fvd(object):
             batch_size: Batch size for the dataloader.
         
         Returns:
-            video_loader: Dataloader or list of numpy arrays containing the videos.
+            Dataloader or list of numpy arrays containing the videos.
         '''
         if data_type=='video_numpy' or video_info.endswith('.npy'):
             video_array = np.load(video_info)
