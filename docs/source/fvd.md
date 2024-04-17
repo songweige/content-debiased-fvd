@@ -5,6 +5,6 @@ support functions to load videos in different formats, and conduct the calculati
 
 <!-- prettier-ignore-start -->
 
-.. autoclass:: fvd.cd_fvd
+.. autoclass:: cdfvd.fvd.cdfvd
 
 <!-- prettier-ignore-end -->

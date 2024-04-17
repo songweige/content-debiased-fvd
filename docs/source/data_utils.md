@@ -2,8 +2,8 @@
 
 <!-- prettier-ignore-start -->
 
-.. autoclass:: utils.data_utils.VideoData
-.. autoclass:: utils.data_utils.VideoDataset
-.. autoclass:: utils.data_utils.FrameDataset
+.. autoclass:: cdfvd.utils.data_utils.VideoData
+.. autoclass:: cdfvd.utils.data_utils.VideoDataset
+.. autoclass:: cdfvd.utils.data_utils.FrameDataset
 
 <!-- prettier-ignore-end -->
