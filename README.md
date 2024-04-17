@@ -11,12 +11,17 @@ CVPR 2024
 
 
 ## Quickstart
-We provide a simple interface to compute FVD scores between two sets of videos that can be adapted to different scenarios. The following code snippet demonstrates how to compute FVD scores between two folders of videos.
+We provide a simple interface to compute FVD scores between two sets of videos that can be adapted to different scenarios. You could install the library through `pip`:
 ```
-from fvd import cd_fvd
-fvd = cd_fvd('videomae', ckpt_path=None)
-fvd.compute_real_stats(fvd.load_videos('path/to/real videos/'))
-fvd.compute_fake_stats(fvd.load_videos('path/to/fake videos/'))
+pip install cd-fvd
+```
+
+The following code snippet demonstrates how to compute FVD scores between two folders of videos.
+```
+from cdfvd import fvd
+fvd = fvd.cdfvd('videomae', ckpt_path=None)
+fvd.compute_real_stats(fvd.load_videos('path/to/realvideos/'))
+fvd.compute_fake_stats(fvd.load_videos('path/to/fakevideos/'))
 fvd = fvd.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
@@ -26,13 +31,18 @@ We provide precomputed statistics for the following datasets.
 
 | Dataset             |  Video Length  | Resolution | Reference Split          | # Reference Videos | Model | Skip Frame # | Seed |
 | :-:              | :---:     | :-:        | :-:            |  :-:          | :-: |  :-:          | :-: |
-| [UCF101](https://www.crcv.ucf.edu/data/UCF101.php) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
+| [UCF101](https://www.crcv.ucf.edu/data/UCF101.php) | 16, 128     | 128, 256         | `train+test`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Sky](https://github.com/weixiong-ur/mdgan) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Taichi](https://github.com/AliaksandrSiarohin/first-order-model/blob/master/data/taichi-loading/README.md) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 16     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 128     | 128, 256         | `train`        |  2048       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [FFS](https://github.com/ondyari/FaceForensics) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 
+Here is an example to load the precomputed statistics:
+```
+fvd.load_videos('ucf101', data_type='stats_pkl', resolution=256, sequence_length=16)
+print(fvd.real_stats.num_items, fvd.real_stats.num_features)
+```
 
 ## Citation
 
