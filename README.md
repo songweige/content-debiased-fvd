@@ -9,6 +9,33 @@ FVD is observed to favor the quality of individual frames over realistic motions
 UMD, CMU<br>
 CVPR 2024
 
+## Quickstart
+We provide a simple interface to compute FVD scores between two sets of videos that can be adapted to different scenarios. The following code snippet demonstrates how to compute FVD scores between two folders of videos.
+```
+from fvd import cd_fvd
+fvd = cd_fvd('videomae', ckpt_path=None)
+fvd.compute_real_stats(fvd.load_videos(real_video_folder))
+fvd.compute_fake_stats(fvd.load_videos(fake_video_folder))
+fvd = fvd.compute_fvd_from_stats()
+```
+
+## Functions for flexible usage
+```
+fvd = cd_fvd(model, n_real='full', n_fake=2048, ckpt_path=None, seed=0, compute_feats=False, device='cuda')
+```
+
+Load the models for computing FVDs.
+
+**Parameters:**
+* **model** - str, name of the model to use, either 'videomae' or 'i3d'
+* **n_real** - int, number of real videos to use, if 'full', all real videos in the dataset are used
+* **n_fake** - int, number of fake videos to use, if 'full', all real videos in the dataset are used
+* **ckpt_path** - str, path to download the model checkpoint
+* **seed** - int, random seed
+* **compute_feats** - bool, whether to keep all features or just mean and covariance
+* **device** - str, device to use for computing the features
+
+**Note:** if `n_fake` (or `n_real`) is greater than the number of videos in the folder, then videos from the folder will be resampled to match `n_fake` (or `n_real`).
 
 ## Quickstart
 We provide a simple interface to compute FVD scores between two sets of videos that can be adapted to different scenarios. You could install the library through `pip`:
