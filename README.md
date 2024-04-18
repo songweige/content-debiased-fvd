@@ -26,6 +26,8 @@ score = evaluator.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
 
+<b>Note:</b> By default `n_fake=2048`. If `n_fake` is greater than number of videos in `path/to/fakevideos/` folder, then same videos will be resampled `n_fake` times. If this is not the desired effect, please use custom value of `n_fake` of set `n_fake='full'` to use all videos in `path/to/fakevideos/` without repetition.
+
 ## Precomputed Datasets
 We provide precomputed statistics for the following datasets. 
 
