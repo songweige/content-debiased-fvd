@@ -19,10 +19,10 @@ pip install cd-fvd
 The following code snippet demonstrates how to compute FVD scores between two folders of videos.
 ```
 from cdfvd import fvd
-fvd = fvd.cdfvd('videomae', ckpt_path=None)
-fvd.compute_real_stats(fvd.load_videos('path/to/realvideos/'))
-fvd.compute_fake_stats(fvd.load_videos('path/to/fakevideos/'))
-fvd = fvd.compute_fvd_from_stats()
+evaluator = fvd.cdfvd('videomae', ckpt_path=None)
+evaluator.compute_real_stats(evaluator.load_videos('path/to/realvideos/'))
+evaluator.compute_fake_stats(evaluator.load_videos('path/to/fakevideos/'))
+score = evaluator.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
 
