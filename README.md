@@ -16,12 +16,17 @@ We provide a simple interface to compute FVD scores between two sets of videos t
 pip install cd-fvd
 ```
 
-The following code snippet demonstrates how to compute FVD scores between two folders of videos.
+You may choose to download some example UCF-101 videos to test the code via:
+```
+bash cdfvd/download_example_videos.sh
+```
+
+The following code snippet demonstrates how to compute FVD scores between a folder of videos and precomputed statistics.
 ```
 from cdfvd import fvd
 evaluator = fvd.cdfvd('videomae', ckpt_path=None)
-evaluator.compute_real_stats(evaluator.load_videos('path/to/realvideos/'))
-evaluator.compute_fake_stats(evaluator.load_videos('path/to/fakevideos/'))
+evaluator.load_videos('ucf101', data_type='stats_pkl', resolution=128, sequence_length=16)
+evaluator.compute_fake_stats(evaluator.load_videos('./example_videos/'))
 score = evaluator.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
@@ -37,12 +42,6 @@ We provide precomputed statistics for the following datasets.
 | [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 16     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [Kinetics](https://github.com/cvdfoundation/kinetics-dataset) | 128     | 128, 256         | `train`        |  2048       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
 | [FFS](https://github.com/ondyari/FaceForensics) | 16, 128     | 128, 256         | `train`        |  2048, full       |`I3D`, `VideoMAE-v2-SSv2`| 1 | 0 |
-
-Here is an example to load the precomputed statistics:
-```
-fvd.load_videos('ucf101', data_type='stats_pkl', resolution=256, sequence_length=16)
-print(fvd.real_stats.num_items, fvd.real_stats.num_features)
-```
 
 ## Citation
 
