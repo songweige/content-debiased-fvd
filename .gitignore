@@ -5,7 +5,6 @@
 *.pt
 *.pth
 *.html
-*.sh
 slurm/
 stats_cache/*
 fvd_stats_cache/*
