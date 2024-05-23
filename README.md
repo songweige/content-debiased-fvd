@@ -1,6 +1,6 @@
 # Content-Debiased FVD for Evaluating Video Generation Models
 
-### [Project Page](https://content-debiased-fvd.github.io/) | [Documentation](https://content-debiased-fvd.github.io/documentation) | [Paper](https://arxiv.org/html/2404.12391v1)
+### [Project Page](https://content-debiased-fvd.github.io/) | [Documentation](https://content-debiased-fvd.github.io/documentation) | [Paper](https://arxiv.org/abs/2404.12391)
 
 FVD is observed to favor the quality of individual frames over realistic motions. We verify this with quantitative measurement. We show that the bias can be attributed to the features extracted from a supervised video classifier trained on the content-biased dataset and using features from large-scale unsupervised models can mitigate the bias. This repo contains code tookit for easily computing FVDs with different pre-trained models. Please refer to out project page or paper for more details about the analysis. 
 
