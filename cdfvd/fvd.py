@@ -48,7 +48,7 @@ class cdfvd(object):
     Args:
         model: Name of the model to use, either `videomae` or `i3d`.
         n_real: Number of real videos to use for computing the FVD score, if `'full'`, all the videos in the dataset will be used.
-        n_fake: Number of fake videos to use for computing the FVD score.
+        n_fake: Number of fake videos to use for computing the FVD score, if `'full'`, all the videos in the dataset will be used.
         ckpt_path: Path to save the model checkpoint.
         seed: Random seed.
         compute_feats: Whether to compute all features or just mean and covariance.
@@ -65,7 +65,7 @@ class cdfvd(object):
         self.n_real = n_real
         self.n_fake = n_fake
         self.real_stats = FeatureStats(max_items=None if n_real == 'full' else n_real, capture_mean_cov=True, capture_all=compute_feats)
-        self.fake_stats = FeatureStats(max_items=n_fake, capture_mean_cov=True, capture_all=compute_feats)
+        self.fake_stats = FeatureStats(max_items=None if n_fake == 'full' else n_fake, capture_mean_cov=True, capture_all=compute_feats)
         self.model_dtype = (
             torch.float16 if half_precision else torch.float32
         )

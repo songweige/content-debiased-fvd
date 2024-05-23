@@ -6,9 +6,8 @@ FVD is observed to favor the quality of individual frames over realistic motions
 
 ***On the Content Bias in Fréchet Video Distance*** <br>
 [Songwei Ge](https://songweige.github.io/), [Aniruddha Mahapatra](https://anime26398.github.io/), [Gaurav Parmar](https://gauravparmar.com/), [Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/), [Jia-Bin Huang](https://jbhuang0604.github.io/)<br>
-UMD, CMU<br>
+UMD, CMU, Adobe<br>
 CVPR 2024
-
 
 ## Quickstart
 We provide a simple interface to compute FVD scores between two sets of videos that can be adapted to different scenarios. You could install the library through `pip`:
@@ -30,6 +29,8 @@ evaluator.compute_fake_stats(evaluator.load_videos('./example_videos/'))
 score = evaluator.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
+
+<b>Note:</b> By default `n_fake=2048`. If `n_fake` is greater than number of videos in `path/to/fakevideos/` folder, then same videos will be resampled `n_fake` times. If this is not the desired effect, please use custom value of `n_fake` of set `n_fake='full'` to use all videos in `path/to/fakevideos/` without repetition.
 
 ## Precomputed Datasets
 We provide precomputed statistics for the following datasets. 
