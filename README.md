@@ -6,7 +6,7 @@ FVD is observed to favor the quality of individual frames over realistic motions
 
 ***On the Content Bias in Fréchet Video Distance*** <br>
 [Songwei Ge](https://songweige.github.io/), [Aniruddha Mahapatra](https://anime26398.github.io/), [Gaurav Parmar](https://gauravparmar.com/), [Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/), [Jia-Bin Huang](https://jbhuang0604.github.io/)<br>
-UMD, CMU<br>
+UMD, CMU, Adobe<br>
 CVPR 2024
 
 ## Quickstart
