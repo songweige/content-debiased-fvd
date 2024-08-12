@@ -21,7 +21,7 @@ bash cdfvd/download_example_videos.sh
 ```
 
 The following code snippet demonstrates how to compute FVD scores between a folder of videos and precomputed statistics.
-```
+```python
 from cdfvd import fvd
 evaluator = fvd.cdfvd('videomae', ckpt_path=None)
 evaluator.load_videos('ucf101', data_type='stats_pkl', resolution=128, sequence_length=16)
