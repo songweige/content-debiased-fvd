@@ -25,7 +25,7 @@ The following code snippet demonstrates how to compute FVD scores between a fold
 from cdfvd import fvd
 evaluator = fvd.cdfvd('videomae', ckpt_path=None)
 evaluator.load_videos('ucf101', data_type='stats_pkl', resolution=128, sequence_length=16)
-evaluator.compute_fake_stats(evaluator.load_videos('./example_videos/'))
+evaluator.compute_fake_stats(evaluator.load_videos('./example_videos/', data_type='video_folder'))
 score = evaluator.compute_fvd_from_stats()
 ```
 Please refer to the [documentation](https://content-debiased-fvd.github.io/documentation) for more detailed instructions on the usage.
