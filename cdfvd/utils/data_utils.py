@@ -308,7 +308,7 @@ class FrameDataset(data.Dataset):
 
             img = img.resize(
                 (self.resolution, self.resolution),
-                Image.ANTIALIAS)
+                Image.LANCZOS)
             img = np.asarray(img, dtype=np.float32)
             img /= 255.
             img_tensor = preprocess_image(img).unsqueeze(0)
