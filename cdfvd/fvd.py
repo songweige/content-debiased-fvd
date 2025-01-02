@@ -279,4 +279,5 @@ class cdfvd(object):
         This function offloads the model to the CPU to release the memory.
         '''
         self.model = self.model.cpu()
+        self.device = "cpu"
         torch.cuda.empty_cache()
